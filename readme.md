@@ -1,3 +1,7 @@
+[![Build Status](https://api.travis-ci.org/rvt/opt-parser.svg?branch=master)](https://www.travis-ci.org/rvt/opt-parser)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+
 # Small library to parse options for embedded systems like Arduino
 
 This library provides a small class to parse option strings and allows you to get these into variables.
