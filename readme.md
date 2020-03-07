@@ -12,31 +12,47 @@ This is usefull if you want to send your device simple messages over MQTT and ac
 
 
 ```
-float x;
+uint32_t x;
 float y;
 float z;
 OptParser::get("x=12 y=15.5 z=-23", [&x,&y,&z](OptValue f) {
         if (std::strcmp( f.key(), "x" ) == 0) {
-            x = f.asInt();
+            x = f;
         }
         if (std::strcmp( f.key(), "y" ) == 0) {
-            y = f.asFloat();
+            y = f;
         }
         if (std::strcmp( f.key(), "z" ) == 0) {
-            z = f.asFloat();
+            z = f;
         }
     });
 ```
 
 More Examples of usage can be found in the ´tests/src/test_optparser.hpp´ directory and should be fairly straight forward.
 
-## Idea
+## Explicit return types
+Since v2.0.0 we do support implicit return types and the following types are supported:
+
+* char*
+* float
+* long
+* char
+* int16_t
+* int32_t
+
+
+## Idea 1
 
 I want to implement a more convenicent method, something like this:
 
 ```OptParser::get("x=12 y=15.5 z=-23", { {"x", &x, intType}, {"y", &y, floatType}, {"z", &z, floatType} });```
 
 But didn´t had time yet..
+
+## TODO
+
+Currently it uses the heap for create a bit of work memory.
+I want to make a version that uses the stack.
 
 ## License
 
