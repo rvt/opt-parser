@@ -16,107 +16,169 @@ const char* OptValue::key() const {
     return m_key;
 }
 
-int16_t OptValue::asInt() const {
+OptValue::operator char* () const {
+    return (char*)m_value;
+}
+
+OptValue::operator int16_t() const {
     return atoi(m_value);
 }
 
-int32_t OptValue::asLong() const {
+OptValue::operator int32_t() const {
     return atol(m_value);
 }
 
-float OptValue::asFloat() const {
+OptValue::operator float() const {
     return atof(m_value);
-}
-
-const char* OptValue::asChar() const {
-    return m_value;
 }
 
 uint8_t OptValue::pos() const {
     return m_pos;
 }
 
-
 void OptParser::get(const char* p_options, TValueFunction f) {
-    get(p_options, " ", f);
+    get(p_options, ' ', f);
 }
 
+void OptParser::get(const char* p_options, char m_sep, TValueFunction callBack) {
+    if (p_options == nullptr) {
+        return;
+    }
 
-void OptParser::get(const char* p_options, const char *m_sep, TValueFunction callBack) {
-    char* token;
-    char* work = strdup(p_options);
-    work = trimwhitespace(work);
-    cleanUp(false, m_sep[0], work, strlen(work), 0);
+    char* workMem = strdup(p_options);
+    char* work = workMem;
     uint8_t pos = 0;
 
-    while ((token = strsep(&work, m_sep)) != NULL) {
-        char* key;
-        char* val;
-        key = strsep(&token, "=");
+    char* keyValueToken;
 
-        if (key != nullptr && strlen(key) > 0) {
-            val = strsep(&token, "=");
-            callBack(OptValue(pos++, key, val == nullptr ? key : val));
-        }
-    }
+    do {
 
-    free(work);
-}
+        // Find m_sep
+        keyValueToken = findToken(work, m_sep);
+        char* key = work;
+        char* value;
+        // Check if the next char is a equals sign, if so we skip that
+        keyValueToken = findToken(work, m_sep);
 
-bool OptParser::cleanUp(bool didCleanup, const char m_sep, char* str,  size_t length, size_t pos) {
-    if (pos >= length) {
-        return didCleanup;
-    }
+        if (keyValueToken != nullptr) {
+            if (keyValueToken[1] == '=') {
+                keyValueToken++;
+                keyValueToken = charToSkip(keyValueToken, m_sep);
+                keyValueToken = findToken(keyValueToken, m_sep);
+            }
 
-    if (
-        (str[pos] == '=' && str[pos + 1] == ' ') ||
-        (str[pos] == ' ' && str[pos + 1] == '=')
-       ) {
-        char* p;
-        char* s;
+            if (keyValueToken[-1] == '=' && keyValueToken[-2] != '\\') {
+                keyValueToken++;
+                keyValueToken = charToSkip(keyValueToken, m_sep);
+                keyValueToken = findToken(keyValueToken, m_sep);
+            }
 
-        if (str[pos + 1] == '=') {
-            p = &str[pos + 0];
-            s = &str[pos + 1];
+            keyValueToken[0] = '\0';
+            work = keyValueToken + 1;
         } else {
-            p = &str[pos + 1];
-            s = &str[pos + 2];
+            work = work + strlen(work);
         }
 
-        while (((*p++) = (*s++)) != '\0');
+        // See if we can split the string
+        value = findToken(key, '=');
 
-        return cleanUp(true, m_sep, str, strlen(str), pos);
-    } else {
-        return cleanUp(didCleanup, m_sep, str, length, pos + 1);
-    }
+        if (value != nullptr) {
+            value[0] = '\0';
+            value++;
+        } else {
+            value = key;
+        }
+
+        callBack(OptValue(pos++, trimwhitespace(key), deEscape(trimwhitespace(value))));
+    } while (work[0] != '\0');
+
+    free(workMem);
 }
 
-bool OptParser::isNext(char* str, char find) {
-    size_t length = strlen(str);
-    size_t pos = 0;
-    while (str[pos++] == ' ' && pos < length);
-    return str[pos] == find;
-}
-
-char *OptParser::trimwhitespace(char *str)
-{
+char* OptParser::findToken(char* str, const char token) {
     if (str == nullptr) {
         return nullptr;
     }
-  char *end;
 
-  // Trim leading space
-  while(isspace((unsigned char)*str)) str++;
+    char* pos = str;
 
-  if(*str == 0)  // All spaces?
+    while ((pos = strchr(pos, token)) != nullptr) {
+
+        // If the token is escaped we continue
+        if (pos[-1] == '\\') {
+            pos++;
+            continue;
+        }
+
+        // find the last position of the token we are looking for
+        char* lastTokenPos = charToSkip(pos, token);
+
+        // If more tokens where found, we go back to the last one and return
+        if (lastTokenPos > pos) {
+            lastTokenPos--;
+        }
+
+        return lastTokenPos;
+    }
+
+    return nullptr;
+}
+
+/**
+ * Skip´s until we find a char that is not charToSkip
+ * Pointer will be at the char that did not match
+ */
+char* OptParser::charToSkip(char* str, const char charToSkip) {
+    if (str == nullptr) {
+        return nullptr;
+    }
+
+    while (str[0] == charToSkip)  {
+        str++;
+    };
+
     return str;
+}
 
-  // Trim trailing space
-  end = str + strlen(str) - 1;
-  while(end > str && isspace((unsigned char)*end)) end--;
+char* OptParser::trimwhitespace(char* str) {
+    if (str == nullptr) {
+        return nullptr;
+    }
 
-  // Write new null terminator character
-  end[1] = '\0';
+    char* end;
 
-  return str;
+    // Trim leading space
+    while (isspace((unsigned char)*str)) {
+        str++;
+    }
+
+    if (*str == 0) { // All spaces?
+        return str;
+    }
+
+    // Trim trailing space
+    end = str + strlen(str) - 1;
+
+    while (end > str && isspace((unsigned char)*end)) {
+        end--;
+    }
+
+    // Write new null terminator character
+    end[1] = '\0';
+
+    return str;
+}
+
+char* OptParser::deEscape(char* str) {
+    if (str == nullptr) {
+        return nullptr;
+    }
+
+    char* work = str;
+
+    while ((work = strchr(work, '\\')) != nullptr) {
+        strcpy(work, work + 1);
+    }
+
+    return str;
 }
