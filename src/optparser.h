@@ -20,6 +20,7 @@ public:
     operator float() const;
     operator long() const;
     operator char() const;
+    operator int8_t() const;
     operator int16_t() const;
     operator int32_t() const;
     uint8_t pos() const;
@@ -36,10 +37,10 @@ public:
     typedef std::function<void(const OptValue&)> TValueFunction;
     /**
      * Start the parser with space as a seperator
-     * p_options : Options that needs to be parsed
+     * p_options : Options that needs to be parsed, might get modified!
      * callBack  : callback function for each option found
      */
-    static void get(const char* p_options, TValueFunction callBack);
+    static void get(char* p_options, TValueFunction callBack);
     /**
      * Start the parser with a given seperator
      * p_options : Options that needs to be parsed

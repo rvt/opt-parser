@@ -24,6 +24,10 @@ OptValue::operator int16_t() const {
     return atoi(m_value);
 }
 
+OptValue::operator int8_t() const {
+    return atoi(m_value);
+}
+
 OptValue::operator int32_t() const {
     return atol(m_value);
 }
@@ -40,12 +44,12 @@ void OptParser::get(const char* p_options, TValueFunction f) {
     get(p_options, ' ', f);
 }
 
-void OptParser::get(const char* p_options, char m_sep, TValueFunction callBack) {
+void OptParser::get(char* p_options, char m_sep, TValueFunction callBack) {
     if (p_options == nullptr) {
         return;
     }
 
-    char* workMem = strdup(p_options);
+    char* workMem = p_options; //strdup(p_options);
     char* work = workMem;
     uint8_t pos = 0;
 
@@ -92,7 +96,7 @@ void OptParser::get(const char* p_options, char m_sep, TValueFunction callBack) 
         callBack(OptValue(pos++, trimwhitespace(key), deEscape(trimwhitespace(value))));
     } while (work[0] != '\0');
 
-    free(workMem);
+    //free(workMem);
 }
 
 char* OptParser::findToken(char* str, const char token) {
