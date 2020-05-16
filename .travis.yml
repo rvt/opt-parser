@@ -13,11 +13,15 @@
 # * User Guide for `platformio ci` command
 #   < http://docs.platformio.org/en/stable/userguide/cmd_ci.html >
 
-language: python
-python:
-    - "3.7"
+os:
+  - linux
+  - osx  
 
-sudo: false
+language: cpp
+
+compiler:
+  - gcc
+  - clang
 
 install:
     - |
@@ -27,9 +31,20 @@ install:
         CMAKE_URL="http://www.cmake.org/files/v3.5/cmake-3.5.2-Linux-x86_64.tar.gz"
         mkdir cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
         export PATH=${DEPS_DIR}/cmake/bin:${PATH}
+        cd ..
       else
           if ! brew ls --version cmake &>/dev/null; then brew install cmake; fi
       fi
+
+    - |
+      if [ "${TRAVIS_OS_NAME}" == "linux" ] ; then
+        sudo apt-get -y install yasm;
+      fi  
+      if [ "${TRAVIS_OS_NAME}" == "osx" ]; then
+        brew update;
+        brew install yasm;
+      fi
+
 script:
     - echo "Run tests on Travis.CI Linux machine"
     - cd tests
