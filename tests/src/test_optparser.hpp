@@ -12,7 +12,8 @@ public:
 
 TEST_CASE("Should get floats and ints", "[optparser]") {
     int calls = 0;
-    OptParser::get("0.1,100.124,-100.678,-100,200", ',', [&calls](OptValue f) {
+    char testCase[]="0.1,100.124,-100.678,-100,200";
+    OptParser::get(testCase, ',', [&calls](OptValue f) {
         if (f.pos() == 0) {
             REQUIRE((float)f == Approx(0.1));
             calls++;
@@ -43,7 +44,8 @@ TEST_CASE("Should get floats and ints", "[optparser]") {
 
 TEST_CASE("Should get ints from floats", "[optparser]") {
     int calls = 0;
-    OptParser::get("abc ,  567.456,  -3567.8521  ",  ',', [&calls](OptValue f) {
+    char testCase[]="abc ,  567.456,  -3567.8521  ";
+    OptParser::get(testCase,  ',', [&calls](OptValue f) {
         if (f.pos() == 1) {
             REQUIRE((int32_t)f == 567);
             calls++;
@@ -59,7 +61,8 @@ TEST_CASE("Should get ints from floats", "[optparser]") {
 
 TEST_CASE("Should call with one item", "[optparser]") {
     int calls = 0;
-    OptParser::get("oneitem",  ',', [&calls](OptValue f) {
+    char testCase[]="oneitem";
+    OptParser::get(testCase,  ',', [&calls](OptValue f) {
         REQUIRE_THAT((const char*)f, Equals("oneitem"));
         calls++;
     });
@@ -68,7 +71,8 @@ TEST_CASE("Should call with one item", "[optparser]") {
 
 TEST_CASE("Should not call when empty", "[optparser]") {
     int calls = 0;
-    OptParser::get("",  ',', [&calls](OptValue f) {
+    char testCase[]="oneitem";
+    OptParser::get(testCase,  ',', [&calls](OptValue f) {
         calls++;
     });
     REQUIRE(calls == 1);
@@ -76,7 +80,8 @@ TEST_CASE("Should not call when empty", "[optparser]") {
 
 TEST_CASE("Should handle variable names with spaces", "[optparser]") {
     int calls = 0;
-    OptParser::get("abc=1,2,3     w =400.123 xyz= abc  w2 = 12.0  ", [&calls](OptValue f) {
+    char testCase[]="abc=1,2,3     w =400.123 xyz= abc  w2 = 12.0  ";
+    OptParser::get(testCase, [&calls](OptValue f) {
         if (f.pos() == 0) {
             REQUIRE_THAT(f.key(), Equals("abc"));
             REQUIRE_THAT((const char*)f, Equals("1,2,3"));
@@ -106,7 +111,8 @@ TEST_CASE("Should handle variable names with spaces", "[optparser]") {
 
 TEST_CASE("Should handle variabel strings with spaces", "[optparser]") {
     int calls = 0;
-    OptParser::get("str1= Hello \\, there ,str2 = Some other = string \\=    ", ',', [&calls](OptValue f) {
+    char testCase[]="str1= Hello \\, there ,str2 = Some other = string \\=    ";
+    OptParser::get(testCase, ',', [&calls](OptValue f) {
         if (f.pos() == 0) {
             REQUIRE_THAT(f.key(), Equals("str1"));
             REQUIRE_THAT((const char*)f, Equals("Hello , there"));
