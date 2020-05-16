@@ -47,7 +47,7 @@ public:
      * m_sep     : Seperator to be used
      * callBack  : callback function for each option found
      */
-    static void get(const char* p_options, char m_sep, TValueFunction callBack);
+    static void get(char* p_options, char m_sep, TValueFunction callBack);
     static char* trimwhitespace(char* str);
 private:
 protected:

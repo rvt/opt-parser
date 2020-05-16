@@ -40,7 +40,7 @@ uint8_t OptValue::pos() const {
     return m_pos;
 }
 
-void OptParser::get(const char* p_options, TValueFunction f) {
+void OptParser::get(char* p_options, TValueFunction f) {
     get(p_options, ' ', f);
 }
 
