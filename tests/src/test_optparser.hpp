@@ -1,4 +1,4 @@
-#include <optparser.h>
+#include <optparser.hpp>
 #include <catch2/catch.hpp>
 using Catch::Matchers::Equals;
 

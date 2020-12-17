@@ -3,18 +3,18 @@
 * Copyright (c) 2018 R. van Twisk
 */
 
-#include "optparser.h"
+#include "optparser.hpp"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
 OptValue::OptValue(const uint16_t p_pos, const char* p_key, const char* p_value) :
-    m_pos(p_pos), m_key(p_key), m_value(p_value) {
+    m_pos{p_pos}, m_key{p_key}, m_value{p_value} {
 }
 
-//OptValue::OptValue(const OptValue &other) :
-//    m_pos(other.m_pos), m_key(other.m_key), m_value(other.m_value) {  
-//}  
+OptValue::OptValue(const OptValue &other) :
+   m_pos{other.m_pos}, m_key{other.m_key}, m_value{other.m_value} {  
+}  
 
 const char* OptValue::key() const {
     return m_key;
@@ -44,11 +44,11 @@ uint16_t OptValue::pos() const {
     return m_pos;
 }
 
-void OptParser::get(char* p_options, TValueFunction f) {
+void OptParser::get(char* p_options, OptParserFunction f) {
     get(p_options, ' ', f);
 }
 
-void OptParser::get(char* p_options, char m_sep, TValueFunction callBack) {
+void OptParser::get(char* p_options, char m_sep, OptParserFunction callBack) {
     if (p_options == nullptr) {
         return;
     }
