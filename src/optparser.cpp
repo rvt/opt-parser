@@ -8,9 +8,13 @@
 #include <string.h>
 #include <stdlib.h>
 
-OptValue::OptValue(const uint8_t p_pos, const char* p_key, const char* p_value) :
+OptValue::OptValue(const uint16_t p_pos, const char* p_key, const char* p_value) :
     m_pos(p_pos), m_key(p_key), m_value(p_value) {
 }
+
+//OptValue::OptValue(const OptValue &other) :
+//    m_pos(other.m_pos), m_key(other.m_key), m_value(other.m_value) {  
+//}  
 
 const char* OptValue::key() const {
     return m_key;
@@ -36,7 +40,7 @@ OptValue::operator float() const {
     return atof(m_value);
 }
 
-uint8_t OptValue::pos() const {
+uint16_t OptValue::pos() const {
     return m_pos;
 }
 
@@ -51,7 +55,7 @@ void OptParser::get(char* p_options, char m_sep, TValueFunction callBack) {
 
     char* workMem = p_options; //strdup(p_options);
     char* work = workMem;
-    uint8_t pos = 0;
+    uint16_t pos = 0;
 
     char* keyValueToken;
 

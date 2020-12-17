@@ -9,11 +9,12 @@
 
 class OptValue {
 private:
-    const uint8_t m_pos;
-    const char* m_key;
-    const char* m_value;
+    uint16_t m_pos;
+    char* m_key;
+    char* m_value;
 public:
-    OptValue(const uint8_t m_pos, const char* p_key, const char* p_value);
+    OptValue(const uint16_t m_pos, const char* p_key, const char* p_value);
+    // OptValue(const OptValue &other);
     const char* key() const;
 
     operator char* () const;
@@ -23,7 +24,33 @@ public:
     operator int8_t() const;
     operator int16_t() const;
     operator int32_t() const;
-    uint8_t pos() const;
+    uint16_t pos() const;
+
+    OptValue& operator=(const OptValue& other)
+        if(&other == this) {
+            return *this;
+        }
+        m_pos = other.m_pos;
+        m_key = other.m_key;
+        m_value = other.m_value;
+        return *this;
+    }
+    OptValue& operator=(OptValue&& other)
+        if(&other == this) {
+            return *this;
+        }
+        m_pos = other.m_pos;
+        m_key = other.m_key;
+        m_value = other.m_value;
+        return *this;
+    }
+    
+    OptValue& operator=(OptValue other)
+        std::swap(m_pos, other.m_pos);
+        std::swap(m_key, other.m_key);
+        std::swap(m_value, other.m_value);
+        return *this;
+    }
 };
 
 /**
