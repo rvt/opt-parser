@@ -12,7 +12,7 @@ public:
 
 TEST_CASE("Should get floats and ints", "[optparser]") {
     int calls = 0;
-    char testCase[]="0.1,100.124,-100.678,-100,200";
+    char testCase[]="0.1,100.124,-100.678,-100,200,true";
     OptParser::get(testCase, ',', [&calls](OptValue f) {
         if (f.pos() == 0) {
             REQUIRE((float)f == Approx(0.1));
@@ -38,8 +38,12 @@ TEST_CASE("Should get floats and ints", "[optparser]") {
             REQUIRE((int)f == 200);
             calls++;
         }
+        if (f.pos() == 5) {
+            REQUIRE((bool)f == true);
+            calls++;
+        }
     });
-    REQUIRE(calls == 5);
+    REQUIRE(calls == 6);
 }
 
 TEST_CASE("Should get ints from floats", "[optparser]") {
