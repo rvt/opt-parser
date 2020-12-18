@@ -24,6 +24,7 @@ public:
     operator int8_t() const;
     operator int16_t() const;
     operator int32_t() const;
+    operator bool() const;
     uint16_t pos() const;
 };
 

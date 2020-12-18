@@ -36,6 +36,10 @@ OptValue::operator int32_t() const {
     return atol(m_value);
 }
 
+OptValue::operator bool() const {
+    return atoi(m_value) || strcmp((char*)m_value, "true") == 0;
+}
+
 OptValue::operator float() const {
     return atof(m_value);
 }
