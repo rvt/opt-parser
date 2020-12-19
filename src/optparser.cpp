@@ -4,7 +4,6 @@
 */
 
 #include "optparser.hpp"
-#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -157,27 +156,21 @@ char* OptParser::trimwhitespace(char* str) {
         return nullptr;
     }
 
-    char* end;
-
     // Trim leading space
-    while (isspace((unsigned char)*str)) {
-        str++;
-    }
-
-    if (*str == 0) { // All spaces?
-        return str;
+    if (isspace((unsigned char)*str)) {
+        char *startNonWhiteSpace = str;
+        do  {
+            startNonWhiteSpace++;
+        } while (isspace((unsigned char)*startNonWhiteSpace));
+        memmove(str, startNonWhiteSpace, strlen(startNonWhiteSpace));
     }
 
     // Trim trailing space
-    end = str + strlen(str) - 1;
-
+    char *end = str + strlen(str) - 1;
     while (end > str && isspace((unsigned char)*end)) {
         end--;
     }
-
-    // Write new null terminator character
     end[1] = '\0';
-
     return str;
 }
 
