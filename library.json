@@ -1,0 +1,20 @@
+{
+  "name":"rvt",
+  "keywords":"parser, iot",
+  "description":"Small parser utility to parse key/value pairs",
+  "repository":{
+     "type":"git",
+     "url":"https://github.com/rvt/opt-parser"
+  },
+  "version":"0.0.1",
+  "authors":[
+     {
+        "name":"R. van Twisk",
+        "email":"github@rvt.dds.nl",
+        "url":"https://github.com/rvt/",
+        "maintainer":true
+     }
+  ],
+  "frameworks":"arduino",
+  "platforms":"*"
+}

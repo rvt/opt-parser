@@ -16,7 +16,7 @@ public:
     OptValue(const uint16_t m_pos, const char* p_key, const char* p_value);
     OptValue(const OptValue &other);
     const char* key() const;
-    bool isKey() const;
+    bool isKey(const char* other) const;
     operator char* () const;
     operator float() const;
     operator long() const;
