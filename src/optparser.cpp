@@ -18,6 +18,9 @@ OptValue::OptValue(const OptValue &other) :
 const char* OptValue::key() const {
     return m_key;
 }
+bool OptValue::isKey(const char *other) const {
+    return strcmp(m_key, other) == 0;
+}
 
 OptValue::operator char* () const {
     return (char*)m_value;
