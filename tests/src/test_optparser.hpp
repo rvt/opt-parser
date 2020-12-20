@@ -132,3 +132,23 @@ TEST_CASE("Should handle variabel strings with spaces", "[optparser]") {
     });
     REQUIRE(calls == 2);
 }
+
+TEST_CASE("Should handle newlines", "[optparser]") {
+    int calls = 0;
+    char testCase[]="str1=foo;\n\n\n\nstr2\n\n=\n\nbar";
+    OptParser::get(testCase, ';', [&calls](OptValue f) {
+        if (f.pos() == 0) {
+            REQUIRE_THAT(f.key(), Equals("str1"));
+            REQUIRE_THAT((const char*)f, Equals("foo"));
+            calls++;
+        }
+
+        if (f.pos() == 1) {
+            REQUIRE_THAT(f.key(), Equals("str2"));
+            REQUIRE_THAT((const char*)f, Equals("bar"));
+            calls++;
+        }
+
+    });
+    REQUIRE(calls == 2);
+}

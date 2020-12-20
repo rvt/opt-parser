@@ -165,7 +165,9 @@ char* OptParser::trimwhitespace(char* str) {
         do  {
             startNonWhiteSpace++;
         } while (isspace((unsigned char)*startNonWhiteSpace));
-        memmove(str, startNonWhiteSpace, strlen(startNonWhiteSpace));
+        auto strLen = strlen(startNonWhiteSpace);
+        strncpy(str, startNonWhiteSpace, strlen(startNonWhiteSpace));
+        str[strLen] = 0;
     }
 
     // Trim trailing space
