@@ -1,5 +1,5 @@
 {
-  "name":"rvt",
+  "name":"rvt-OptionParser",
   "keywords":"parser, iot",
   "description":"Small parser utility to parse key/value pairs",
   "repository":{
