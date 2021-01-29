@@ -152,3 +152,14 @@ TEST_CASE("Should handle newlines", "[optparser]") {
     });
     REQUIRE(calls == 2);
 }
+
+
+TEST_CASE("Stack version should not corrupt buffer", "[optparser]") {
+    int calls = 0;
+    char testCase[]="0.1,100.124,-100.678,-100,200,true";
+    OptParser::get<64>(testCase, ',', [&calls](OptValue f) {        
+            calls++;
+    });
+    REQUIRE_THAT((const char*)testCase, Equals("0.1,100.124,-100.678,-100,200,true"));
+    REQUIRE(calls == 6);
+}

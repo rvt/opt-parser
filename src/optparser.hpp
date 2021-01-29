@@ -50,6 +50,15 @@ public:
      * callBack  : callback function for each option found
      */
     static void get(char* p_options, char m_sep, OptParserFunction callBack);
+
+    template<std::size_t desiredCapacity>
+    static void get(char* p_options, char m_sep, OptParserFunction callBack) {
+        static_assert(desiredCapacity > 0, "Must be > 0");
+        char buffer[desiredCapacity];
+        strncpy(buffer, p_options, strlen(p_options));
+        OptParser::get(buffer, m_sep, callBack);
+    }
+
     static char* trimwhitespace(char* str);
 private:
 protected:
@@ -57,4 +66,3 @@ protected:
     static char* charToSkip(char* str, const char charToSkip = ' ');
     static char* deEscape(char* str);
 };
-
