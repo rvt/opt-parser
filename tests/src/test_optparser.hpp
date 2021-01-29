@@ -156,7 +156,7 @@ TEST_CASE("Should handle newlines", "[optparser]") {
 
 TEST_CASE("Stack version should not corrupt buffer", "[optparser]") {
     int calls = 0;
-    char testCase[]="0.1,100.124,-100.678,-100,200,true";
+    const char testCase[]="0.1,100.124,-100.678,-100,200,true";
     OptParser::get<64>(testCase, ',', [&calls](OptValue f) {        
             calls++;
     });
@@ -166,7 +166,7 @@ TEST_CASE("Stack version should not corrupt buffer", "[optparser]") {
 
 TEST_CASE("Stack version should not crash if to small", "[optparser]") {
     int calls = 0;
-    char testCase[]="0.1,100.124,-100.678,-100,200,true";
+    const char testCase[]="0.1,100.124,-100.678,-100,200,true";
     OptParser::get<12>(testCase, ',', [&calls](OptValue f) {        
             calls++;
     });

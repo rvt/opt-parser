@@ -53,11 +53,11 @@ public:
     static void get(char* p_options, char m_sep, OptParserFunction callBack);
 
     template<std::size_t desiredCapacity>
-    static void get(char* p_options, char m_sep, OptParserFunction callBack) {
+    static void get(const char* p_options, char m_sep, OptParserFunction callBack) {
         static_assert(desiredCapacity > 0, "Must be > 0");
         char buffer[desiredCapacity];
-        size_t len = desiredCapacity<strlen(p_options)?desiredCapacity:strlen(p_options);
-        memcpy(buffer, p_options, len);
+        size_t sizeOptions = strlen(p_options);
+        memcpy(buffer, p_options, desiredCapacity<sizeOptions?desiredCapacity:sizeOptions);
         buffer[desiredCapacity-1] = '\0';
         OptParser::get(buffer, m_sep, callBack);
     }
