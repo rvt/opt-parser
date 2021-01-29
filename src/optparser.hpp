@@ -56,7 +56,9 @@ public:
     static void get(char* p_options, char m_sep, OptParserFunction callBack) {
         static_assert(desiredCapacity > 0, "Must be > 0");
         char buffer[desiredCapacity];
-        strncpy(buffer, p_options, strlen(p_options));
+        size_t len = desiredCapacity<strlen(p_options)?desiredCapacity:strlen(p_options);
+        memcpy(buffer, p_options, len);
+        buffer[desiredCapacity-1] = '\0';
         OptParser::get(buffer, m_sep, callBack);
     }
 
