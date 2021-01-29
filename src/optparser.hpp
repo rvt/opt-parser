@@ -4,8 +4,9 @@
 */
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 #include <functional>
+#include <cstring>
 
 class OptValue {
 private:

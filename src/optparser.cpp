@@ -4,8 +4,7 @@
 */
 
 #include "optparser.hpp"
-#include <string.h>
-#include <stdlib.h>
+#include <cstdlib>
 
 OptValue::OptValue(const uint16_t p_pos, const char* p_key, const char* p_value) :
     m_pos{p_pos}, m_key{p_key}, m_value{p_value} {
