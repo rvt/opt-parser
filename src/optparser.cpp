@@ -12,7 +12,7 @@ OptValue::OptValue(const uint16_t p_pos, const char* p_key, const char* p_value)
 
 OptValue::OptValue(const OptValue &other) :
    m_pos{other.m_pos}, m_key{other.m_key}, m_value{other.m_value} {  
-}  
+}
 
 const char* OptValue::key() const {
     return m_key;
@@ -70,8 +70,6 @@ void OptParser::get(char* p_options, char m_sep, OptParserFunction callBack) {
         keyValueToken = findToken(work, m_sep);
         char* key = work;
         char* value;
-        // Check if the next char is a equals sign, if so we skip that
-        keyValueToken = findToken(work, m_sep);
 
         if (keyValueToken != nullptr) {
             if (keyValueToken[1] == '=') {
@@ -145,7 +143,6 @@ char* OptParser::charToSkip(char* str, const char charToSkip) {
     if (str == nullptr) {
         return nullptr;
     }
-
     while (str[0] == charToSkip)  {
         str++;
     };
