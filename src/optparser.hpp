@@ -15,7 +15,7 @@ private:
     const char* m_value;
 public:
     OptValue(const uint16_t m_pos, const char* p_key, const char* p_value);
-    OptValue(const OptValue &other);
+    OptValue(const OptValue& other);
     const char* key() const;
     bool isKey(const char* other) const;
     operator char* () const;
@@ -57,8 +57,8 @@ public:
         static_assert(desiredCapacity > 0, "Must be > 0");
         char buffer[desiredCapacity];
         size_t sizeOptions = strlen(p_options) + 1;
-        memcpy(buffer, p_options, desiredCapacity<sizeOptions?desiredCapacity:sizeOptions);
-        buffer[desiredCapacity-1] = '\0';
+        memcpy(buffer, p_options, desiredCapacity < sizeOptions ? desiredCapacity : sizeOptions);
+        buffer[desiredCapacity - 1] = '\0';
         OptParser::get(buffer, m_sep, callBack);
     }
 

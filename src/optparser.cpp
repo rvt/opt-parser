@@ -10,14 +10,14 @@ OptValue::OptValue(const uint16_t p_pos, const char* p_key, const char* p_value)
     m_pos{p_pos}, m_key{p_key}, m_value{p_value} {
 }
 
-OptValue::OptValue(const OptValue &other) :
-   m_pos{other.m_pos}, m_key{other.m_key}, m_value{other.m_value} {  
+OptValue::OptValue(const OptValue& other) :
+    m_pos{other.m_pos}, m_key{other.m_key}, m_value{other.m_value} {
 }
 
 const char* OptValue::key() const {
     return m_key;
 }
-bool OptValue::isKey(const char *other) const {
+bool OptValue::isKey(const char* other) const {
     return strcmp(m_key, other) == 0;
 }
 
@@ -58,11 +58,12 @@ void OptParser::get(char* p_options, char m_sep, OptParserFunction callBack) {
         return;
     }
 
-    char* workMem = p_options; //strdup(p_options);
+    char* workMem = p_options;
     char* work = workMem;
     uint16_t pos = 0;
 
     char* keyValueToken;
+    bool lastCallEmpty = false;
 
     do {
 
@@ -72,6 +73,12 @@ void OptParser::get(char* p_options, char m_sep, OptParserFunction callBack) {
         char* value;
 
         if (keyValueToken != nullptr) {
+            // This ensure that if we try to match the strin "," we callBacl before and after the seperator
+            // We could arcgue that this is a string split in two
+            if (keyValueToken[0] == m_sep && keyValueToken[1] == '\0') {
+                lastCallEmpty = true;
+            }
+
             if (keyValueToken[1] == '=') {
                 keyValueToken++;
                 keyValueToken = charToSkip(keyValueToken, m_sep);
@@ -102,6 +109,10 @@ void OptParser::get(char* p_options, char m_sep, OptParserFunction callBack) {
 
         callBack(OptValue(pos++, trimwhitespace(key), deEscape(trimwhitespace(value))));
     } while (work[0] != '\0');
+
+    if (lastCallEmpty) {
+        callBack(OptValue(pos++, "", ""));
+    }
 
     //free(workMem);
 }
@@ -143,6 +154,7 @@ char* OptParser::charToSkip(char* str, const char charToSkip) {
     if (str == nullptr) {
         return nullptr;
     }
+
     while (str[0] == charToSkip)  {
         str++;
     };
@@ -157,20 +169,24 @@ char* OptParser::trimwhitespace(char* str) {
 
     // Trim leading space
     if (isspace((unsigned char)*str)) {
-        char *startNonWhiteSpace = str;
+        char* startNonWhiteSpace = str;
+
         do  {
             startNonWhiteSpace++;
         } while (isspace((unsigned char)*startNonWhiteSpace));
+
         auto strLen = strlen(startNonWhiteSpace);
         strncpy(str, startNonWhiteSpace, strlen(startNonWhiteSpace));
         str[strLen] = 0;
     }
 
     // Trim trailing space
-    char *end = str + strlen(str) - 1;
+    char* end = str + strlen(str) - 1;
+
     while (end > str && isspace((unsigned char)*end)) {
         end--;
     }
+
     end[1] = '\0';
     return str;
 }
