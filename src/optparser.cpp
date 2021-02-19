@@ -176,7 +176,7 @@ char* OptParser::trimwhitespace(char* str) {
         } while (isspace((unsigned char)*startNonWhiteSpace));
 
         auto strLen = strlen(startNonWhiteSpace);
-        strncpy(str, startNonWhiteSpace, strlen(startNonWhiteSpace));
+        memcpy(str, startNonWhiteSpace, strlen(startNonWhiteSpace));
         str[strLen] = 0;
     }
 
